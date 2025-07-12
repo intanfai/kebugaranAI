@@ -116,7 +116,8 @@ class _PrediksiPageState extends State<PrediksiPage> {
   Future<void> kirimData() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final url = Uri.parse('http://172.20.10.4:5000/predict');
+    final url = Uri.parse("https://web-production-fe31.up.railway.app/predict");
+
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
