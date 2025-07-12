@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # Tambahkan ini
 import pickle
 import pandas as pd
 from datetime import datetime
 
 app = Flask(__name__)
+CORS(app)  # Tambahkan ini untuk mengizinkan request dari aplikasi mobile
 
 # Load model
 model = pickle.load(open("model_kebugaran.pkl", "rb"))
@@ -32,7 +34,7 @@ def predict():
         saran.append("Pertahankan gaya hidup sehatmu!")
 
     # Tambahkan ke riwayat
-    nilai = 90 if result == 1 else 60  # nilai untuk grafik
+    nilai = 90 if result == 1 else 60
     riwayat_prediksi.append({
         "tanggal": datetime.now().strftime('%Y-%m-%d'),
         "hasil": label,
@@ -44,10 +46,11 @@ def predict():
         "saran": " ".join(saran)
     })
 
+# Tambahkan endpoint riwayat
 @app.route("/riwayat", methods=["GET"])
 def get_riwayat():
     return jsonify(riwayat_prediksi)
 
 if __name__ == "__main__":
-    # Ubah host agar bisa diakses dari perangkat lain (misal HP Android)
+    # Ubah host agar bisa diakses dari luar (Railway, HP, dll)
     app.run(host="0.0.0.0", port=5000, debug=False)
